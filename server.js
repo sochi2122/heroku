@@ -50,7 +50,7 @@ app.get('/books', (req, res) => {
 
 app.get('/books/:id', (req, res) => {
   Book.findById(req.params.id, (err, foundBook) => {
-      res.send(foundBook)
+      res.send('index.ejs', foundBook)
   });
 });
 
