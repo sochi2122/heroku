@@ -1,80 +1,103 @@
-//___________________
-//Dependencies
-//___________________
-const express = require("express")
-const methodOverride = require("method-override")
-const mongoose = require("mongoose")
-const app = express()
-const db = mongoose.connection
+// require deps
+const express = require('express');
+const mongoose = require('mongoose');
+const methodOverride = require('method-override');
+const booksController = require('./controllers/books');
+// initialize app
+const app = express();
+const Book = require('./models/book')
 
-require("dotenv").config()
+// configure settings
+require('dotenv').config();
 
-//This info is in the dotenv file. But I figured the URI info was needed to check if it was setup correctly. 
-//MONGODB_URI=mongodb+srv://admin:abc1234@cluster0.vn7x6.mongodb.net/myFirstDatabase?retryWrites=true&w=majority
+// connect to and configure mongoDB with mongoose
+const DATABASE_URL = 'MONGODB_URI=mongodb+srv://admin:abc1234@cluster0.vn7x6.mongodb.net/myFirstDatabase?retryWrites=true&w=majority'
+mongoose.connect(DATABASE_URL);
 
-//PORT=3000
+const db = mongoose.connection;
 
-//___________________
-//Port
-//___________________
-// Allow use of Heroku's port or your own local port, depending on the environment
-const PORT = process.env.PORT || 3000
+// set up mongodb event listeners
+db.on('connected', () => console.log('Connected to MongoDB'));
+db.on('error', (err) => console.log('MongoDB Error: ' + err.message));
 
 
-//___________________
-//Database
-//___________________
-// How to connect to the database either via heroku or locally
-const MONGODB_URI = process.env.MONGODB_URI
+// mount middleware
+app.use(express.urlencoded({ extended: false })); // creates req.body
+app.use(methodOverride('_method'));
 
-// Connect to Mongo &
-// Fix Depreciation Warnings from Mongoose
-// May or may not need these depending on your Mongoose version
-mongoose.connect(MONGODB_URI, {
+// mount routes
+app.use('/books', booksController);
+
+//create
+
+
+// Create route
+app.post('/books', (req, res) => {
+  Book.create(req.body, (err, createdBook) => {
+      res.send(createdBook);
+  }); // this code runs asynchronous
+});
+
+// Index route
+app.get('/books', (req, res) => {
+  Book.find({}, (err, arrayOfBooks) => {
+      res.send(arrayOfBooks);
+  });
+});
+
+
+// Show route
+
+app.get('/books/:id', (req, res) => {
+  Book.findById(req.params.id, (err, foundBook) => {
+      res.send(foundBook)
+  });
+});
+
+
+// Delete route
+app.delete('/books/:id', (req, res) => {
+  Book.findByIdAndDelete(req.params.id, (err, copyOfDeletedBook) => {
+      res.send(copyOfDeletedBook);
+  });
+});
+
+// Update route
+
+app.put('/books/:id', (req, res) => {
+  Book.findByIdAndUpdate(
+      req.params.id, 
+      req.body, 
+      { new: true }, 
+      (err, updatedBook) => {
+          res.send(updatedBook);
+  });
+});
+
+
+
+
+
+// Database Connection
+mongoose.connect(DATABASE_URL, {
   useNewUrlParser: true,
   useUnifiedTopology: true,
+  useFindAndModify: false,
+  useCreateIndex: true,
 })
 
-// Error / success
-db.on("error", (err) => console.log(err.message + " is mongod not running?"))
-db.on("connected", () => console.log("mongod connected: ", MONGODB_URI))
-db.on("disconnected", () => console.log("mongod disconnected"))
-
-//___________________
-//Middleware
-//___________________
-
-//use public folder for static assets
-app.use(express.static("public"))
-
-// populates req.body with parsed info from forms - if no data from forms will return an empty object {}
-app.use(express.urlencoded({ extended: false })) // extended: false - does not allow nested objects in query strings
-app.use(express.json()) // returns middleware that only parses JSON - may or may not need it depending on your project
-
-//use method override
-app.use(methodOverride("_method")) // allow POST, PUT and DELETE from a form
-
-//___________________
-// Routes
+// Database Connection Error/Success - optional but can be really helpful
+db.on("error", (err) => console.log(err.message + " is Mongod not running?"))
+db.on("connected", () => console.log("mongo connected"))
+db.on("disconnected", () => console.log("mongo disconnected"))
 
 
 
-//___________________
-//localhost:3000
-app.get("/", (req, res) => {
-  res.send("Hello World!")
-})
+// tell the app to listen
 
+const PORT = process.env.PORT; 
+// heroku or any cloud service will set this value for us
 
-// Create
-app.post("/books", (req, res) => {
-  res.send("received")
-})
-
-
-
-
-
-
-
-app.listen(PORT, () => console.log("express is listening on:", PORT))
+app.listen(PORT, () => {
+    console.log('Express is listening on port: ' + PORT);
+});
