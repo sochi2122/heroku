@@ -9,12 +9,12 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/sochi2122/herokulabshinochi.git"  
+    "url": "git+https://github.com/sochi2122/herokulabshinochi.git"
   },
   "author": "",
   "license": "ISC",
   "bugs": {
-   "url": "git+https://github.com/sochi2122/herokulabshinochi.git/issues"
+    "url": "git+https://github.com/sochi2122/herokulabshinochi.git/issues"
   },
   "homepage": "https://github.com/sochi2122/herokulabshinochi#readme",
   "dependencies": {
