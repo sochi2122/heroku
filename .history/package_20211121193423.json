@@ -16,7 +16,7 @@
   "bugs": {
    "url": "git+https://github.com/sochi2122/herokulabshinochi.git/issues"
   },
-  "homepage": "https://github.com/sochi2122/herokulabshinochi#readme",
+  "homepage": "https://github.com/sochi2122/heroku#readme",
   "dependencies": {
     "dotenv": "^10.0.0",
     "ejs": "^3.1.6",
