@@ -6,6 +6,14 @@ const methodOverride = require("method-override")
 const mongoose = require("mongoose")
 const app = express()
 const db = mongoose.connection
+
+require("dotenv").config()
+
+//This info is in the dotenv file. But I figured the URI info was needed to check if it was setup correctly. 
+//MONGODB_URI=mongodb+srv://admin:abc1234@cluster0.vn7x6.mongodb.net/myFirstDatabase?retryWrites=true&w=majority
+
+//PORT=3000
+
 //___________________
 //Port
 //___________________
@@ -57,7 +65,16 @@ app.get("/", (req, res) => {
   res.send("Hello World!")
 })
 
-//___________________
-//Listener
-//___________________
+
+// Create
+app.post("/books", (req, res) => {
+  res.send("received")
+})
+
+
+
+
+
+
+
 app.listen(PORT, () => console.log("express is listening on:", PORT))
