@@ -12,7 +12,6 @@ const db = mongoose.connection
 // Allow use of Heroku's port or your own local port, depending on the environment
 const PORT = process.env.PORT || 3000
 
-
 //___________________
 //Database
 //___________________
@@ -49,6 +48,8 @@ app.use(methodOverride("_method")) // allow POST, PUT and DELETE from a form
 //___________________
 // Routes
 
+
+const mongoURI = process.env.MONGODB_URI
 
 
 //___________________
