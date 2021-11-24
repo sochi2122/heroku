@@ -6,7 +6,7 @@ const booksController = require('./controllers/books');
 // initialize app
 const app = express();
 const Book = require('./models/book')
-
+//const books = require('./controllers/books');
 // configure settings
 require('dotenv').config();
 
@@ -38,7 +38,14 @@ app.post('/books', (req, res) => {
   }); // this code runs asynchronous
 });
 
-// Index route
+app.get('/', (req, res) => {
+
+res.send(		`Welcome to the books app! Go to <a href="/books">localhost:3000/books</a> to get started!`
+)
+
+})
+
+
 app.get('/books', (req, res) => {
   Book.find({}, (err, arrayOfBooks) => {
       res.send(arrayOfBooks);
